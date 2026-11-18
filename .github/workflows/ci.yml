@@ -45,12 +45,16 @@ jobs:
       - name: Build Docker image
         run: docker build -t $DOCKER_IMAGE_NAME .
 
+      - name: Display Docker image details
+        run: docker image ls "$DOCKER_IMAGE_NAME"
+
       - name: Test Docker image locally
         run: |
-          docker run -d --name test-app -p 8080:8080 $DOCKER_IMAGE_NAME
-          sleep 15
+          docker run -d --name democyber-test -p 8080:8080 $DOCKER_IMAGE_NAME
+          sleep 10
           curl -f http://localhost:8080
-          docker stop test-app
+          docker stop democyber-test
+          docker rm democyber-test
       
       # Upload the Gitleaks report
       - name: Upload Gitleaks report
