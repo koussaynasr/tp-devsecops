@@ -51,3 +51,11 @@ jobs:
           sleep 15
           curl -f http://localhost:8080
           docker stop test-app
+      
+      # Upload the Gitleaks report
+      - name: Upload Gitleaks report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-report
+          path: results.sarif
