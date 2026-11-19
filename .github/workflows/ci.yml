@@ -30,11 +30,15 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Compile Java
-        run: mvn compile
-
-      - name: Build Java project with Maven
-        run: mvn clean package
+      - name: Build and analyze with SonarCloud
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+        run: |
+          mvn -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.organization="$SONAR_ORGANIZATION" \
+            -Dsonar.projectKey="$SONAR_PROJECT_KEY"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
